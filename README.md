@@ -6,11 +6,10 @@ Manages Kubernetes resources based on a set of manifest templates
 Requirements
 ------------
 
-* openshift
+* openshift 0.7.3 or 0.8.0 (to be released)
 * kubernetes
-* kubernetes-validate (optional)
-* latest k8s `module_utils` and module from Ansible
-
+* k8s `module_utils` and module from Ansible with append_hash functionality
+  (to be released after openshift 0.7.3/0.8.0 is released)
 
 Role Variables
 --------------
@@ -44,6 +43,9 @@ kube_resource_manifest_files: "{{ lookup('fileglob', template_dir + '/*manifest.
   roles:
     - kube-resource
 ```
+
+See a more thorough worked example of [templates](https://github.com/willthames/ansiblefest2018/tree/master/ansible/playbooks/templates/docker-debug-versioned/v2)
+and associated [inventory](https://github.com/willthames/ansiblefest2018/blob/master/ansible/inventory/group_vars/docker-debug-versioned.yml)
 
 License
 -------
