@@ -1,0 +1,28 @@
+galaxy_info:
+  author: Will Thames
+  description: Manage Kubernetes resources
+
+  license: MIT
+
+  min_ansible_version: 2.7
+
+  #
+  # platforms is a list of platforms, and each platform has a name and a list of versions.
+  #
+  # platforms:
+  # - name: Fedora
+  #   versions:
+  #   - all
+  #   - 25
+  # - name: SomePlatform
+  #   versions:
+  #   - all
+  #   - 1.0
+  #   - 7
+  #   - 99.99
+
+  galaxy_tags:
+    - kubernetes
+    - k8s
+
+dependencies: []

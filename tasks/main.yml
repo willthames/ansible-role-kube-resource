@@ -1,0 +1,41 @@
+- name: empty manifest and secret lists (important if role is run twice!)
+  set_fact:
+    kube_resource_manifests_from_files: []
+    kube_resource_secrets_from_files: []
+
+- name: create secrets list
+  set_fact:
+    kube_resource_secrets_from_files: >
+      {{ kube_resource_secrets_from_files + lookup('template', item)|from_yaml_all|list }}
+  loop: "{{ kube_resource_secrets_files }}"
+  no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
+
+- name: create manifests list
+  set_fact:
+    kube_resource_manifests_from_files: >
+      {{ kube_resource_manifests_from_files + lookup('template', item)|from_yaml_all|list }}
+  loop: "{{ kube_resource_manifest_files }}"
+
+- name: create configmaps
+  k8s:
+    definition: "{{ item.value }}"
+    append_hash: yes
+  loop: "{{ kube_resource_configmaps | dict2items }}"
+
+- name: create secrets
+  k8s:
+    definition: "{{ item.value }}"
+    append_hash: yes
+  loop: "{{ kube_resource_secrets | dict2items }}"
+  no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
+
+- name: create secrets from files
+  k8s:
+    definition: "{{ item }}"
+  loop: "{{ kube_resource_secrets_from_files }}"
+  no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
+
+- name: apply all resource definitions in order
+  k8s:
+    definition: "{{ item }}"
+  loop: "{{ kube_resource_manifests_from_files }}"

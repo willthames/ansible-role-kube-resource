@@ -1,0 +1,4 @@
+kube_resource_configmaps: {}
+kube_resource_secrets: {}
+kube_resource_secrets_files: []
+kube_resource_UNSAFE_show_logs: no
