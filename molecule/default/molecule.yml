@@ -29,6 +29,8 @@ provisioner:
   options:
     vault-password-file: vault_password
     vvv: true
+  playbooks:
+    side_effect: side_effect.yml
 scenario:
   name: default
 verifier:

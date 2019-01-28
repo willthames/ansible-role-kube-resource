@@ -34,6 +34,8 @@
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_secrets | dict2items }}"
+  loop_control:
+    label: "{{ item.value.kind }}-{{ item.value.metadata.name }}"
   no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
 
 - name: create secrets from files
@@ -43,7 +45,17 @@
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_secrets_from_files }}"
+  loop_control:
+    label: "{{ item.kind }}-{{ item.metadata.name }}"
   no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
+
+- name: find existing deployment, if any
+  k8s_facts:
+    api_version: "{{ kube_resource_deployments_api }}"
+    kind: Deployment
+    name: "{{ kube_resource_name }}"
+    namespace: "{{ kube_resource_namespace }}"
+  register: kube_resource_previous_deployment
 
 - name: apply all resource definitions in order
   k8s:
@@ -52,3 +64,6 @@
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_manifests_from_files }}"
+
+- include_tasks: set_owner.yml
+  when: kube_resource_set_owner
