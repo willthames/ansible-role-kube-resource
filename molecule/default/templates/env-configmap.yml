@@ -10,3 +10,4 @@ data:
   DATABASE_NAME: application
   DATABASE_HOST: db.{{ env }}.example.com
   ENABLE_BUGGY_FEATURE: "True"
+  CHANGEABLE_VARIABLE: {{ changeable }}

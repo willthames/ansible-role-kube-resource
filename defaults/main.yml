@@ -6,3 +6,6 @@ kube_resource_UNSAFE_show_logs: false
 kube_resource_validate_options: {}
 kube_resource_wait: false
 kube_resource_wait_timeout: 120
+kube_resource_set_owner: false
+kube_resource_prefix_label: kube_resource_prefix
+kube_resource_deployments_api: apps/v1

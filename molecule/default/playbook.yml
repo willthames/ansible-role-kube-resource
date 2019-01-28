@@ -1,25 +1,9 @@
 ---
-- name: Converge
+- name: Initial run
   hosts: docker-debug-test-runner
   vars:
     version: blue
 
-  pre_tasks:
-    - name: find namespace - should have been created by prepare.yml
-      k8s_facts:
-        kind: Namespace
-        label_selectors:
-          - created-by=ansible-role-kube-resource-molecule
-      register: k8s_facts_namespace
-
-    - name: check that there is only one such namespace
-      assert:
-        that:
-          k8s_facts_namespace.resources | length == 1
-
-    - name: generate sufficiently random namespace name
-      set_fact:
-        kube_resource_namespace: "{{ k8s_facts_namespace.resources[0].metadata.name }}"
-
   roles:
-    - role: kube-resource
+    - set-namespace
+    - kube-resource

@@ -12,6 +12,7 @@ Requirements
 
 * openshift 0.8.2
 * kubernetes-validate (only needed if `kube_resource_validation_options` is set
+* jmespath (only needed if `kube_resource_set_owner` is set)
 
 Role Variables
 --------------
@@ -24,6 +25,23 @@ Role Variables
 * `kube_resource_secrets_files` - a list of Secret definition template file names
 * `kube_resource_UNSAFE_show_logs` - whether to show the logs when working with secrets. Defaults to `no`.
   For use when troubleshooting problems with secret definitions.
+* `kube_resource_set_owner` - set owners of configmaps and secrets to the replicaset belonging to the
+  resource (default `no`). Works only if the replicaset is named the same as `kube_resource_name` and if
+  the configmaps and secrets are labelled with the label referred to by `kube_resource_prefix_label`. e.g
+  ```
+  kind: ConfigMap
+  metadata:
+    name: "{{ kube_resource_name }}-env"
+    namespace: "{{ kube_resource_namespace }}"
+    labels:
+      kube_resource_prefix: "{{ kube_resource_name }}-env"
+  ```
+  This feature is currently experimental (it works in the test suite).
+
+* `kube_resource_prefix_label` - name of label that allows all configmaps of a particular type (e.g.
+  the environment variable configmap) for a particular resource to be found. Defaults to
+  `kube_resource_prefix`
+
 * `kube_resource_validate_options` - how to validate Kubernetes resources. Defaults to an empty dict,
   disabling validation. A sensible setting is:
   ```
@@ -34,6 +52,8 @@ Role Variables
 * `kube_resource_wait` - whether to wait for resources to reach their desired state (default `no`)
 * `kube_resource_wait_timeout` - how long to wait in seconds for resources if `kube_resource_wait` is on
   (default 120)
+* `kube_resource_deployments_api` - only needed if `kube_resource_set_owner` is set to `yes`. Defaults
+  to `apps/v1` - might need to be `apps/v1beta2` or `extensions/v1beta1` for older Kubernetes versions
 
 
 Dependencies
@@ -73,10 +93,22 @@ for Docker)
 K8S_AUTH_CONTEXT=docker-for-desktop molecule test
 ```
 
+Versions
+--------
+
+This module relies on functionality of Ansible that won't be released until Ansible 2.8 in mid 2019.
+The functionality has been included in this role, but will need to be removed once 2.8 is released.
+As such, the role will be available by Ansible version.
+
+Versions will be tagged `v2.7-x` where `x` is the release number of the role for version 2.7, with
+a parallel `v2.8-y` version for use with Ansible 2.8 (or ansible devel branch before then)
+
 License
 -------
 
-BSD
+This role contains modules and filters from the Ansible project and thus inherit Ansible's license
+
+GPL 3
 
 Author Information
 ------------------

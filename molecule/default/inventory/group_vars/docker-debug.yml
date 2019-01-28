@@ -8,3 +8,4 @@ kube_resource_secrets:
 kube_resource_manifest_files: "{{ query('fileglob', kube_resource_template_dir + '*manifest.yml') }}"
 kube_resource_secrets_files:
   - "{{ kube_resource_template_dir }}tls-secrets.yml"
+changeable: v1

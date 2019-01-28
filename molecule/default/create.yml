@@ -3,19 +3,6 @@
   hosts: docker-debug-test-runner
 
   tasks:
-
-    - name: check whether namespace exists
-      k8s_facts:
-        kind: Namespace
-        label_selectors:
-          - created-by=ansible-role-kube-resource-molecule
-      register: k8s_facts_namespace
-
-    - name: fail if any namespaces are hanging around from previous tests
-      assert:
-        that:
-          - not k8s_facts_namespace.resources
-
     - name: generate sufficiently random namespace name
       set_fact:
         kube_resource_namespace: "kube-resource-test-{{ (ansible_facts.date_time.iso8601_micro | hash('sha256'))[:8] }}"
