@@ -1,3 +1,4 @@
+---
 - name: empty manifest and secret lists (important if role is run twice!)
   set_fact:
     kube_resource_manifests_from_files: []
@@ -19,23 +20,35 @@
 - name: create configmaps
   k8s:
     definition: "{{ item.value }}"
-    append_hash: yes
+    append_hash: true
+    validate: "{{ kube_resource_validate_options }}"
+    wait: "{{ kube_resource_wait }}"
+    wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_configmaps | dict2items }}"
 
 - name: create secrets
   k8s:
     definition: "{{ item.value }}"
-    append_hash: yes
+    append_hash: true
+    validate: "{{ kube_resource_validate_options }}"
+    wait: "{{ kube_resource_wait }}"
+    wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_secrets | dict2items }}"
   no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
 
 - name: create secrets from files
   k8s:
     definition: "{{ item }}"
+    validate: "{{ kube_resource_validate_options }}"
+    wait: "{{ kube_resource_wait }}"
+    wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_secrets_from_files }}"
   no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
 
 - name: apply all resource definitions in order
   k8s:
     definition: "{{ item }}"
+    validate: "{{ kube_resource_validate_options }}"
+    wait: "{{ kube_resource_wait }}"
+    wait_timeout: "{{ kube_resource_wait_timeout }}"
   loop: "{{ kube_resource_manifests_from_files }}"

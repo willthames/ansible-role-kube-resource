@@ -1,0 +1,23 @@
+---
+# inventory.config file in YAML format
+plugin: generator
+strict: false
+hosts:
+  name: "{{ application }}-{{ environment }}-runner"
+  parents:
+    - name: "{{ application }}-{{ environment }}"
+      parents:
+        - name: "{{ application }}"
+          vars:
+            application: "{{ application }}"
+        - name: "{{ environment }}"
+          vars:
+            environment: "{{ environment }}"
+    - name: runner
+layers:
+  environment:
+    - dev
+    - test
+    - prod
+  application:
+    - docker-debug

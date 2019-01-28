@@ -1,0 +1,2 @@
+openshift==0.8.2
+kubernetes-validate==1.12.2

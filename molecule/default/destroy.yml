@@ -1,0 +1,18 @@
+---
+- name: Destroy
+  hosts: docker-debug-test-runner
+
+  tasks:
+    - name: find namespaces owned by this role
+      k8s_facts:
+        kind: Namespace
+        label_selectors:
+          - created-by=ansible-role-kube-resource-molecule
+      register: k8s_facts_namespace
+
+    - name: remove namespaces owned by this role
+      k8s:
+        kind: Namespace
+        name: "{{ item.metadata.name }}"
+        state: absent
+      loop: "{{ k8s_facts_namespace.resources }}"

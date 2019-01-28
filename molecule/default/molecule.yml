@@ -1,0 +1,37 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+  options:
+    managed: true
+    ansible_connection_options:
+      ansible_connection: local
+lint:
+  name: yamllint
+  options:
+    config-file: molecule/default/yamllint.cfg
+platforms:
+  - name: docker-debug-test-runner
+    groups:
+      - docker-debug
+      - test
+      - runner
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_STDOUT_CALLBACK: yaml
+  lint:
+    name: ansible-lint
+  inventory:
+    links:
+      group_vars: inventory/group_vars
+  options:
+    vault-password-file: vault_password
+    vvv: true
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
