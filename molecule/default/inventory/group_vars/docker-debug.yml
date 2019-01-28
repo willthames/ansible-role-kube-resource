@@ -1,0 +1,10 @@
+---
+application: docker-debug
+kube_resource_configmaps:
+  env-configmap: "{{ lookup('template', kube_resource_template_dir + 'env-configmap.yml') | from_yaml }}"
+  www-data-configmap: "{{ lookup('template', kube_resource_template_dir + 'www-data-configmap.yml') | from_yaml }}"
+kube_resource_secrets:
+  env-secrets: "{{ lookup('template', kube_resource_template_dir + 'env-secrets.yml') | from_yaml }}"
+kube_resource_manifest_files: "{{ query('fileglob', kube_resource_template_dir + '*manifest.yml') }}"
+kube_resource_secrets_files:
+  - "{{ kube_resource_template_dir }}tls-secrets.yml"

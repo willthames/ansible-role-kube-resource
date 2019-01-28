@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ kube_resource_name }}
+  namespace: {{ kube_resource_namespace }}
+  labels:
+    {{ kube_deployment_labels | to_nice_yaml(indent=2) | indent(4) }}
+spec:
+  replicas: {{ kube_deployment_replicas }}
+  selector:
+    matchLabels:
+      {{ kube_resource_labels | to_nice_yaml(indent=2) | indent(6) }}
+  template:
+    metadata:
+      labels:
+        {{ kube_resource_labels | to_nice_yaml(indent=2) | indent(8) }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+        - name: {{ kube_resource_name }}
+          # Normally container tag would come from inventory but we want to show changes over time
+          image: {{ container_registry|ternary(container_registry + "/", "") }}{{ container_image }}:{{ version }}
+          imagePullPolicy: {{ image_pull_policy }}
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          envFrom:
+            - configMapRef:
+                name: {{ (kube_resource_configmaps['env-configmap']) | k8s_config_resource_name }}
+            - secretRef:
+                name: {{ (kube_resource_secrets['env-secrets']) | k8s_config_resource_name }}
+          readinessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: www-data
+              mountPath: /app/static/extras
+            - name: tls
+              mountPath: /etc/ssl/
+      volumes:
+        - name: www-data
+          configMap:
+            name: {{ (kube_resource_configmaps['www-data-configmap']) | k8s_config_resource_name }}
+        - name: tls
+          secret:
+            secretName: {{ kube_resource_name }}-tls
+            defaultMode: 0440
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ kube_resource_name }}
+  namespace: {{ kube_resource_namespace }}
+  labels:
+    {{ kube_resource_labels | to_nice_yaml(indent=2) | indent(4) }}
+spec:
+  ports:
+    - port: 8080  # the port that this service should serve on
+      # the container on each pod to connect to, can be a name
+      # (e.g. 'www') or a number (e.g. 80)
+      targetPort: 5000
+      protocol: TCP
+  # just like the selector in the deployment,
+  # but this time it identifies the set of pods to load balance
+  # traffic to.
+  selector:
+    {{ kube_resource_labels | to_nice_yaml(indent=2) | indent(4) }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ kube_resource_name }}
+  namespace: {{ kube_resource_namespace }}
+spec:
+  rules:
+    - host: {{ kube_resource_fqdn }}
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: {{ kube_resource_name }}
+            servicePort: 8080

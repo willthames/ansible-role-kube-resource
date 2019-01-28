@@ -1,0 +1,4 @@
+FROM geerlingguy/docker-centos7-ansible
+
+COPY requirements.txt /
+RUN pip install -r /requirements.txt
