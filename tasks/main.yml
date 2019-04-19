@@ -58,11 +58,7 @@
   register: kube_resource_previous_deployment
 
 - name: apply all resource definitions in order
-  k8s:
-    definition: "{{ item }}"
-    validate: "{{ kube_resource_validate_options }}"
-    wait: "{{ kube_resource_wait }}"
-    wait_timeout: "{{ kube_resource_wait_timeout }}"
+  include_tasks: resource.yml
   loop: "{{ kube_resource_manifests_from_files }}"
 
 - include_tasks: set_owner.yml
