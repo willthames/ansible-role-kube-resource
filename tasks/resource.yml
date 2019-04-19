@@ -1,0 +1,7 @@
+---
+- name: apply {{ item.metadata.name }} {{ item.kind }}
+  k8s:
+    definition: "{{ item }}"
+    validate: "{{ kube_resource_validate_options }}"
+    wait: "{{ kube_resource_wait }}"
+    wait_timeout: "{{ kube_resource_wait_timeout }}"
