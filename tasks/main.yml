@@ -1,4 +1,10 @@
 ---
+- name: ensure that the namespace exists
+  k8s:
+    kind: Namespace
+    name: "{{ kube_resource_namespace }}"
+  when: kube_resource_create_namespace
+
 - name: empty manifest and secret lists (important if role is run twice!)
   set_fact:
     kube_resource_manifests_from_files: []

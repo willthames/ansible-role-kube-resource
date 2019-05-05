@@ -1,4 +1,5 @@
 ---
+kube_resource_create_namespace: false
 kube_resource_configmaps: {}
 kube_resource_secrets: {}
 kube_resource_secrets_files: []

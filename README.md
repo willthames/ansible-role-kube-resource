@@ -18,6 +18,7 @@ Role Variables
 --------------
 
 * `kube_resource_namespace` - namespace in which to create resources
+* `kube_resource_create_namespace` - whether to create the namespace (defaults to `False`)
 * `kube_resource_name` - name of resource being managed
 * `kube_resource_configmaps` - a dict of ConfigMaps, mapping a reference name to a ConfigMap definition
 * `kube_resource_manifest_files` - a list of resource definition template file names
