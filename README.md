@@ -26,17 +26,8 @@ Role Variables
 * `kube_resource_UNSAFE_show_logs` - whether to show the logs when working with secrets. Defaults to `no`.
   For use when troubleshooting problems with secret definitions.
 * `kube_resource_set_owner` - set owners of configmaps and secrets to the replicaset belonging to the
-  resource (default `no`). Works only if the replicaset is named the same as `kube_resource_name` and if
-  the configmaps and secrets are labelled with the label referred to by `kube_resource_prefix_label`. e.g
-  ```
-  kind: ConfigMap
-  metadata:
-    name: "{{ kube_resource_name }}-env"
-    namespace: "{{ kube_resource_namespace }}"
-    labels:
-      kube_resource_prefix: "{{ kube_resource_name }}-env"
-  ```
-  This feature is currently experimental (it works in the test suite).
+  resource. This is actually a dangerous feature, as too many restarts of a deployment can cause
+  configmaps and secrets to disappear without warning! So this feature will be removed.
 
 * `kube_resource_prefix_label` - name of label that allows all configmaps of a particular type (e.g.
   the environment variable configmap) for a particular resource to be found. Defaults to
