@@ -26,3 +26,5 @@ galaxy_info:
     - k8s
 
 dependencies: []
+collections:
+  - community.kubernetes
