@@ -4,15 +4,15 @@
 
   tasks:
     - name: find namespaces owned by this role
-      k8s_facts:
+      k8s_info:
         kind: Namespace
         label_selectors:
           - created-by=ansible-role-kube-resource-molecule
-      register: k8s_facts_namespace
+      register: k8s_info_namespace
 
     - name: remove namespaces owned by this role
       k8s:
         kind: Namespace
         name: "{{ item.metadata.name }}"
         state: absent
-      loop: "{{ k8s_facts_namespace.resources }}"
+      loop: "{{ k8s_info_namespace.resources }}"

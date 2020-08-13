@@ -1,12 +1,12 @@
 ---
 - name: find namespace
-  k8s_facts:
+  k8s_info:
     kind: Namespace
     label_selectors:
       - created-by=ansible-role-kube-resource-molecule
-  register: k8s_facts_namespace
+  register: k8s_info_namespace
 
 - name: set kube_resource_namespace appropriately
   set_fact:
     kube_resource_namespace: >-
-      {{ (k8s_facts_namespace.resources | json_query('[?status.phase != `Terminating`]') | first).metadata.name }}
+      {{ (k8s_info_namespace.resources | json_query('[?status.phase != `Terminating`]') | first).metadata.name }}
