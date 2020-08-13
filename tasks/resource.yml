@@ -1,7 +1,9 @@
 ---
-- name: apply {{ item.metadata.name }} {{ item.kind }}
+- name: Apply {{ item.metadata.name }} {{ item.kind }} manifest
   k8s:
+    apply: "{{ kube_resource_apply }}"
     definition: "{{ item }}"
-    validate: "{{ kube_resource_validate_options }}"
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
+    validate: "{{ kube_resource_validate_options }}"
+  no_log: "{{ item.kind == 'Secret' and not(kube_resource_UNSAFE_show_logs | bool) }}"

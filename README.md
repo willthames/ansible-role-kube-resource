@@ -10,13 +10,16 @@ and secrets as
 Requirements
 ------------
 
-* openshift 0.8.2
+* openshift 0.11.2 or above
 * kubernetes-validate (only needed if `kube_resource_validation_options` is set
-* jmespath (only needed if `kube_resource_set_owner` is set)
+* kubernetes
+* kubernetes-validate python module if `kube_resource_validate` is set
+* community.kubernetes collection 1.0.0 (if using 2.10 onwards)
 
 Role Variables
 --------------
 
+* `kube_resource_apply` - whether to use client side apply (equivalent to `kubectl apply`)
 * `kube_resource_namespace` - namespace in which to create resources
 * `kube_resource_create_namespace` - whether to create the namespace (defaults to `False`)
 * `kube_resource_name` - name of resource being managed
@@ -24,24 +27,16 @@ Role Variables
 * `kube_resource_manifest_files` - a list of resource definition template file names
 * `kube_resource_secrets` - a dict of Secrets, mapping a reference name to a Secret definition
 * `kube_resource_secrets_files` - a list of Secret definition template file names
-* `kube_resource_UNSAFE_show_logs` - whether to show the logs when working with secrets. Defaults to `no`.
+* `kube_resource_validate` - configuration for the `validation` argument of the `k8s` module. e.g.
+  ```
+  kube_resource_validate:
+    fail_on_error: true
+    strict: true
+  ```
+* `kube_resource_wait` - whether to wait for resources to update (default `false`)
+* `kube_resource_wait_timeout` - how long to wait in seconds for resources to update (ignored if kube_resource_wait is unset). Defaults to 120
+* `kube_resource_UNSAFE_show_logs` - whether to show the logs when working with secrets. Defaults to `false`.
   For use when troubleshooting problems with secret definitions.
-* `kube_resource_set_owner` - set owners of configmaps and secrets to the replicaset belonging to the
-  resource (default `no`). Works only if the replicaset is named the same as `kube_resource_name` and if
-  the configmaps and secrets are labelled with the label referred to by `kube_resource_prefix_label`. e.g
-  ```
-  kind: ConfigMap
-  metadata:
-    name: "{{ kube_resource_name }}-env"
-    namespace: "{{ kube_resource_namespace }}"
-    labels:
-      kube_resource_prefix: "{{ kube_resource_name }}-env"
-  ```
-  This feature is currently experimental (it works in the test suite).
-
-* `kube_resource_prefix_label` - name of label that allows all configmaps of a particular type (e.g.
-  the environment variable configmap) for a particular resource to be found. Defaults to
-  `kube_resource_prefix`
 
 * `kube_resource_validate_options` - how to validate Kubernetes resources. Defaults to an empty dict,
   disabling validation. A sensible setting is:
@@ -53,8 +48,6 @@ Role Variables
 * `kube_resource_wait` - whether to wait for resources to reach their desired state (default `no`)
 * `kube_resource_wait_timeout` - how long to wait in seconds for resources if `kube_resource_wait` is on
   (default 120)
-* `kube_resource_deployments_api` - only needed if `kube_resource_set_owner` is set to `yes`. Defaults
-  to `apps/v1` - might need to be `apps/v1beta2` or `extensions/v1beta1` for older Kubernetes versions
 
 
 Dependencies
