@@ -6,4 +6,4 @@
 
   roles:
     - set-namespace
-    - kube-resource
+    - ansible-role-kube-resource

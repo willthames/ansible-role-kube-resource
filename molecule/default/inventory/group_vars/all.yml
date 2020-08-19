@@ -1,4 +1,5 @@
 ---
+kube_resource_apply: true
 kube_resource_name: "{{ env }}-{{ application }}"
 kube_resource_labels:
   application: "{{ application }}"
@@ -25,5 +26,3 @@ kube_resource_validate_options:
   strict: true
   fail_on_error: true
 kube_resource_wait: true
-kube_resource_set_owner: true
-kube_resource_deployments_api: apps/v1
