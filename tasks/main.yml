@@ -13,14 +13,14 @@
 - name: create secrets list
   set_fact:
     kube_resource_secrets_from_files: >
-      {{ kube_resource_secrets_from_files + lookup('template', item)|from_yaml_all|list }}
+      {{ kube_resource_secrets_from_files + lookup(kube_resource_lookup_plugin, item)|from_yaml_all|list }}
   loop: "{{ kube_resource_secrets_files }}"
   no_log: "{{ not kube_resource_UNSAFE_show_logs }}"
 
 - name: create manifests list
   set_fact:
     kube_resource_manifests_from_files: >
-      {{ kube_resource_manifests_from_files + lookup('template', item)|from_yaml_all|list }}
+      {{ kube_resource_manifests_from_files + lookup(kube_resource_lookup_plugin, item)|from_yaml_all|list }}
   loop: "{{ kube_resource_manifest_files }}"
 
 - name: create configmaps

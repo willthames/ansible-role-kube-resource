@@ -48,6 +48,9 @@ Role Variables
 * `kube_resource_wait` - whether to wait for resources to reach their desired state (default `no`)
 * `kube_resource_wait_timeout` - how long to wait in seconds for resources if `kube_resource_wait` is on
   (default 120)
+* `kube_resource_lookup_plugin` - The lookup plugin to use when reading manifests. If you're reading pure
+  kubernetes manifests, you can use `file` which helps if those manifests contain jinja. Defaults to
+  `template`
 
 
 Dependencies
