@@ -26,7 +26,7 @@
 - name: create configmaps
   k8s:
     definition: "{{ item.value }}"
-    append_hash: true
+    append_hash: "{{ kube_resource_append_hash }}"
     validate: "{{ kube_resource_validate_options }}"
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
@@ -35,7 +35,7 @@
 - name: create secrets
   k8s:
     definition: "{{ item.value }}"
-    append_hash: true
+    append_hash: "{{ kube_resource_append_hash }}"
     validate: "{{ kube_resource_validate_options }}"
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
