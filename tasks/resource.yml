@@ -6,4 +6,4 @@
     wait: "{{ kube_resource_wait }}"
     wait_timeout: "{{ kube_resource_wait_timeout }}"
     validate: "{{ kube_resource_validate_options }}"
-  no_log: "{{ item.kind == 'Secret' and not(kube_resource_UNSAFE_show_logs | bool) }}"
+  no_log: "{{ item.kind == 'Secret' and not(kube_resource_unsafe_show_logs | bool) }}"

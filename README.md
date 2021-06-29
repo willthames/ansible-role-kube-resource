@@ -35,7 +35,7 @@ Role Variables
   ```
 * `kube_resource_wait` - whether to wait for resources to update (default `false`)
 * `kube_resource_wait_timeout` - how long to wait in seconds for resources to update (ignored if kube_resource_wait is unset). Defaults to 120
-* `kube_resource_UNSAFE_show_logs` - whether to show the logs when working with secrets. Defaults to `false`.
+* `kube_resource_unsafe_show_logs` - whether to show the logs when working with secrets. Defaults to `false`.
   For use when troubleshooting problems with secret definitions.
 
 * `kube_resource_validate_options` - how to validate Kubernetes resources. Defaults to an empty dict,
